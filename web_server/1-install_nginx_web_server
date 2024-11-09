@@ -1,9 +1,33 @@
 #!/usr/bin/env bash
-# install nginx on server
 
-sudo apt-get update
-sudo apt install nginx -y
+# Description: Installs Nginx, sets up a custom page with "Holberton School", and configures Nginx to serve this content.
 
-echo "Holberton School" | sudo tee /var/www/html/index.html
-sudo nginx -t 
+# Update package list and install Nginx if not installed
+sudo apt-get update -y
+sudo apt-get install nginx -y
+
+# Create the custom content in the default HTML file
+echo "Holberton School for the win!" | sudo tee /var/www/html/index.html
+
+# Update Nginx configuration to serve from /var/www/html and ensure it serves index.html by default
+sudo sed -i 's|root /usr/share/nginx/html;|root /var/www/html;|' /etc/nginx/sites-available/default
+sudo sed -i 's|index index.html index.htm index.nginx-debian.html;|index index.html;|' /etc/nginx/sites-available/default
+
+# Restart Nginx to apply changes
 sudo service nginx restart
+
+# Verify Nginx is running and serving on port 80
+if ! sudo lsof -i :80 | grep -q nginx; then
+  echo "Error: Nginx is not running on port 80."
+  exit 1
+fi
+
+# Test the page content to ensure it contains "Holberton School"
+curl_output=$(curl -s localhost)
+if [[ "$curl_output" != *"Holberton School"* ]]; then
+  echo "Error: Nginx is not serving the expected content."
+  exit 1
+fi
+
+echo "Setup complete. Nginx is serving 'Holberton School for the win!' on port 80."
+
