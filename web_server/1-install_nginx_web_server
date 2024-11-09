@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Description: Installs Nginx, sets up a custom page with "Holberton School", and configures Nginx to serve this content.
 
 # Update package list and install Nginx if not installed
