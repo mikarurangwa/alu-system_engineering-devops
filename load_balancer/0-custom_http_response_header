@@ -5,14 +5,8 @@
 
 sudo apt-get update
 sudo apt-get -y install nginx
-sudo ufw enable
-sudo ufw allow 'Nginx HTTP'
-sudo ufw allow 'OpenSSH'
 echo 'Hello World!' |sudo tee /var/www/html/index.html
 
 custom_header="server_name _;\n\tadd_header X-Served-By \$HOSTNAME;"
 sudo sed -i "s|server_name _;|$custom_header|" /etc/nginx/sites-enabled/default
 sudo service nginx restart
-
-echo -e "127.0.0.1 localhost 6340-web-01\n::1 localhost" | sudo tee /etc/hosts
-echo -e "127.0.0.1 localhost 6340-web-02\n::1 localhost" | sudo tee /etc/hosts
